@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>野獸切切樂</title>
+    <meta name="description" content="野獸切切樂">
+  <meta name="keywords" content="野獸切切樂,野獸, 切切樂,114514,野獸前輩,野獸前輩遊戲">
+  <meta name="author" content="黃韋傑學者">
+  <meta property="og:title" content="野獸切切樂">
+  <meta property="og:description" content="享受野獸的咆嘯">
+  <meta property="og:image" content="https://minatoaqua0508-crypto.github.io/Beast-Cheechele//images/logo1.jfif">
+  <meta property="og:url" content="https://minatoaqua0508-crypto.github.io/Beast-Cheechele//index.html">
+  <meta property="og:type" content="website">
+<meta property="og:site_name" content="野獸切切樂">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://minatoaqua0508-crypto.github.io/Beast-Cheechele//index.html">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+       * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #f8f2ee;
+  overflow: hidden;
+  user-select: none;
+  height: 100vh;
+  display: flex;
+  flex-direction: column; /* 上下排列：上方工具列 + 下方遊戲 */
+}
+.credit {
+        position: fixed;         /* 固定在視窗，而不是跟著內容 */
+        bottom: 10px;            /* 距離底部 10px */
+        right: 10px;             /* 距離右邊 10px */
+        font-size: 12px;         /* 字體小一點 */
+        color: rgba(0, 0, 0, 0.3); /* 半透明灰色 */
+        font-style: italic;      /* 斜體 */
+        pointer-events: none;    /* 不影響滑鼠點擊 */
+        user-select: none;       /* 不能選取文字 */
+    }
+.game-container {
+  flex: 1; /* 遊戲區域填滿剩餘空間 */
+  display: flex;
+  width: 100%;
+}
+
+.game-area {
+  flex: 1;
+  position: relative;
+  background: #D2B48C;
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: none;       /* 讓觸控事件不被捲動吃掉 */
+  overscroll-behavior: contain;
+}
+
+.score-display {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #4A4A4A;
+  z-index: 1000;
+}
+
+.sidebar {
+  position: relative; /* 為遮罩定位 */
+  width: 100%;
+  min-height: 60px;
+  background: url("imags/logo30.jpg") center/cover no-repeat;
+  padding: 8px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  flex: 0 0 auto;
+}
+
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.18); /* 遮罩濃淡可調 */
+  pointer-events: none;
+}
+/* 如果用了遮罩，讓內容在遮罩之上 */
+.sidebar > * { position: relative; z-index: 1; }
+
+/* title */
+.sidebar-section h2 {
+  font-size: 16px;   /* title */
+  font-weight: 500;
+  color: #87CEFA;    /* 淡藍色 */
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+/* 遊戲標題欄位 */
+.sidebar-section.game-title {
+  width: 300px;
+  min-height: 80px;
+  background: #8da1c8;  /* 背景色 */
+  border-radius: 8px;
+  padding: 51px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;  /* 垂直排列 */
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;  /* 標題與按鈕間距 */
+}
+
+/* again 按鈕 */
+.again-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  background: #FF6B35;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.again-btn:hover {
+  background: #FF8C69;
+  transform: scale(1.05);
+}
+
+/* 歷史最高分數 */
+.sidebar-section h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #8B4513;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* 歷史最高分數欄位 */
+.sidebar-section.high-score {
+  width: 300px;
+  min-height: 80px;
+  background: #8da1c8;
+  border-radius: 8px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;  /* 垂直排列 */
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px; /* 標題與按鈕間距 */
+  color: black;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* stop 按鈕 */
+#pauseBtn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  background: #ee1818;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#pauseBtn:hover {
+  background: #ee1818;
+  transform: scale(1.05);
+}
+
+/* 可切物體 */
+.sidebar-section h4 {
+  font-size: 20px;  /* 可切物體 */
+  font-weight: 800;
+  color: #98FB98;   /* 淡綠色 */
+  margin-bottom: 6px;
+}
+
+/* 可切物欄位調整 */
+.sidebar-section.fruit-info .fruit {
+  padding: 11px 50px;
+  position: static !important;  /* 取消 absolute */
+  left: auto; top: auto;        /* 清掉定位 */
+  transform: none;
+  display: block;               /* 一個項目一行 */
+  float: none;
+  margin: 0;                    /* 間距交給 gap/下面這行 */
+  line-height: 1.6;
+}
+
+.sidebar-section.fruit-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;                    /* 標題與每個項目之間的間距 */
+}
+
+/* 傑哥，野獸(綠字)，等等條目  */
+.fruit.positive {
+  color: #1ee743;
+  font-size: 20px;
+}
+.fruit.positive1 {
+  color: #f00d0d;
+  font-size: 20px;
+}
+/* 積分兌換 */
+.sidebar-section h5 {
+  font-size: 16px;  /* 積分兌換 */
+  font-weight: 500;
+  color: #01090e;   /* 淡藍色 */
+  margin-bottom: 6px;
+}
+
+/* 積分兌換欄位調整 */
+.sidebar-section.exchange {
+  width: 240px;          /* 固定寬度 */
+  min-height: 160px;     /* 固定高度 */
+  background: #8da1c8;   /* 深藍灰背景 */
+  border-radius: 8px;    /* 圓角 */
+  padding: 1px;          /* 內距 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;              /* 標題與按鈕間距 */
+  color: white;
+  padding-bottom: 10px;  /* 保證最後按鈕底下有空間 */
+}
+
+/* 🎯 按鈕統一樣式 */
+.sidebar-section.exchange button {
+  width: 200px;          /* 統一寬度 */
+  height: 40px;          /* 統一高度 */
+  border: none;
+  border-radius: 5px;
+  background: #FF6B35;   /* 統一綠色 */
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* 🎯 按鈕 hover 效果 */
+.sidebar-section.exchange button:hover:enabled {
+  background: #FF8C69;   /* 亮綠色 */
+  transform: scale(1.05);
+}
+
+/* 🎯 停用狀態保持原程式機制 */
+.sidebar-section.exchange button:disabled {
+  background: #888;      /* 灰色 (保留原機制) */
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 先把頁面底色統一為咖啡色，避免任何地方露白 */
+html, body { background:#8B4513 !important; }
+
+.fruit-img[src*="logo2.webp"] { width: 150px; height: 150px; }
+/* 桌機預設：所有水果圖片都是 100x100 */
+.fruit-img[src*="logo0.jfif"],
+.fruit-img[src*="logo1.jfif"],
+.fruit-img[src*="logo3.jpg"],
+.fruit-img[src*="logo4.jfif"],
+.fruit-img[src*="logo5.jfif"],
+.fruit-img[src*="logo6.jfif"],
+.fruit-img[src*="logo7.jpeg"],
+.fruit-img[src*="logo8.jfif"],
+.fruit-img[src*="logo9.jfif"],
+.fruit-img[src*="logo10.jfif"],
+.fruit-img[src*="logo11.jfif"],
+.fruit-img[src*="logo12.jpg"],
+.fruit-img[src*="logo13.jfif"],
+.fruit-img[src*="logo14.jfif"],
+.fruit-img[src*="logo15.jfif"],
+.fruit-img[src*="logo16.jfif"],
+.fruit-img[src*="logo17.jfif"],
+.fruit-img[src*="logo18.jfif"],
+.fruit-img[src*="logo20.jfif"],
+.fruit-img[src*="logo21.png"],
+.fruit-img[src*="logo22.png"],
+.fruit-img[src*="logo23.jfif"],
+.fruit-img[src*="logo24.jfif"],
+.fruit-img[src*="logo25.jpg"],
+.fruit-img[src*="logo26.jpg"],
+.fruit-img[src*="logo27.jpg"],
+.fruit-img[src*="logo28.jfif"],
+.fruit-img[src*="logo29.jfif"],
+.fruit-img[src*="logo30.jpg"] {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;   /* ✅ 加上圓角設計 */
+  object-fit: cover;     /* ✅ 保持比例填滿，不會變形 */
+}
+
+
+/* 手機版（寬度 ≤390px）：縮小水果圖片 */
+@media (max-width: 450px) {
+  .fruit-img[src*="logo0.jfif"],
+  .fruit-img[src*="logo1.jfif"],
+  .fruit-img[src*="logo3.jpg"],
+  .fruit-img[src*="logo4.jfif"],
+  .fruit-img[src*="logo5.jfif"],
+  .fruit-img[src*="logo6.jfif"],
+  .fruit-img[src*="logo7.jpeg"],
+  .fruit-img[src*="logo8.jfif"],
+  .fruit-img[src*="logo9.jfif"],
+  .fruit-img[src*="logo10.jfif"],
+  .fruit-img[src*="logo11.jfif"],
+  .fruit-img[src*="logo12.jpg"],
+  .fruit-img[src*="logo13.jfif"],
+  .fruit-img[src*="logo14.jfif"],
+  .fruit-img[src*="logo15.jfif"],
+  .fruit-img[src*="logo16.jfif"],
+  .fruit-img[src*="logo17.jfif"],
+  .fruit-img[src*="logo18.jfif"],
+  .fruit-img[src*="logo20.jfif"],
+  .fruit-img[src*="logo21.png"],
+  .fruit-img[src*="logo22.png"],
+  .fruit-img[src*="logo23.jfif"],
+  .fruit-img[src*="logo24.jfif"],
+  .fruit-img[src*="logo25.jpg"],
+  .fruit-img[src*="logo26.jpg"],
+  .fruit-img[src*="logo27.jpg"],
+  .fruit-img[src*="logo28.jfif"],
+  .fruit-img[src*="logo29.jfif"] {
+    width: 50px;   /* 縮小尺寸 */
+    height: 50px;
+    border-radius: 8px;   /* ✅ 小螢幕縮小，但仍保留圓角 */
+    object-fit: cover;
+  }
+  .fruit-img[src*="logo2.webp"] { width: 80px; height: 80px; }
+}
+
+
+        .fruit {
+            position: absolute;
+            font-size: 40px;
+            z-index: 100;
+            transition: all 0.1s ease;
+        }
+
+        .bomb {
+            position: absolute;
+            font-size: 40px;
+            z-index: 100;
+        }
+
+        .slice-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 50;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        @keyframes sliceEffect {
+            0% { 
+                transform: scale(1) rotate(0deg); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: scale(1.2) rotate(180deg); 
+                opacity: 0.7; 
+            }
+            100% { 
+                transform: scale(0.8) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        .sliced {
+            animation: sliceEffect 0.8s ease-out forwards;
+        }
+
+        .special-red,.special-fruit {
+            position: absolute;
+            font-size: 60px;
+            z-index: 90;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+             width: 60px; height: 60px;  /* 沒有就補上；有動態尺寸也可 */
+  touch-action: none;         /* 元件本身也停用預設手勢 */
+        }
+
+        .special-red,.special-fruit:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .special-red,.special-fruit:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes touchReaction {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .special-red,.special-fruit.touched {
+            animation: touchReaction 0.5s ease-out;
+        }
+
+        .fruit-info {
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .fruit-info div {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+.special-fruit img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+.special-fruit, .special-red {
+  position: absolute;
+  cursor: grab;
+}
+       
+
+       
+        
+
+        .game-title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .game-title h2 {
+            color: #8B4513;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+        }
+
+        .high-score {
+            background: rgba(255,215,0,0.2);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                margin-right: 10px;
+                padding: 15px;
+            }
+            
+            .fruit, .bomb {
+                font-size: 35px;
+            }
+            
+            .score-display {
+                font-size: 20px;
+            }
+        }
+        
+:root{
+  --drawer-handle: 36px; /* 收納時的保留高度(小橫條高度) */
+}
+
+/* ▶ 預設：右上角 */
+.drawer-toggle{
+  position: absolute;
+  top: 8px;
+  right: 10px;         /* ← 右上 */
+  left: auto;
+ width: 40px;         /* 28 → 40 */
+  height: 40px;        /* 28 → 40 */
+  line-height: 40px;   /* 讓字垂直置中 */
+  font-size: 20px;     /* 16 → 20，箭頭更大 */
+  border: 0;
+  border-radius: 50%;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  transition: transform .25s ease, background .25s ease;
+  z-index: 10;         /* 蓋過面板內其他元素 */
+}
+.drawer-toggle:hover{ transform: scale(1.06); }
+
+/* 讓 sidebar 支援高度動畫 */
+.sidebar{
+  position: relative;
+  transition: height .25s ease, padding .25s ease, background .25s ease, box-shadow .25s ease;
+}
+
+/* ▶ 收納：整個 sidebar 收起 */
+body.drawer-collapsed .sidebar{
+  height: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* ▶ 收納時：切換鍵固定右上角（不受 sidebar 影響） */
+body.drawer-collapsed .drawer-toggle{
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));  /* ← 右上 */
+  left: auto;
+   width: 44px;         /* 32 → 44 */
+  height: 44px;        /* 32 → 44 */
+  line-height: 44px;
+  font-size: 22px;     /* 符號更清楚 */
+  border: 0;
+  border-radius: 50%;
+  background: #222;
+  color: #fff;
+  z-index: 1002;  /* 蓋在遊戲區上方 */
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+
+/* ▶ 小螢幕微調（避免貼邊/瀏海） */
+@media (max-width: 390px){
+  .drawer-toggle{
+    top: 6px;
+    right: max(8px, env(safe-area-inset-right));
+    left: auto;
+  }
+}
+
+/* ====== 450px 以下：工具列 full-bleed + 不被擠壓 ====== */
+@media (max-width: 450px){
+
+  /* 直排：工具列在上、遊戲在下 */
+  .game-container{
+    display:flex;
+    flex-direction:column;
+  }
+  .game-container > .sidebar{ order:1; }
+  .game-container > .game-area{ order:2; }
+
+  /* 工具列改成 2 欄 Grid + Full-Bleed */
+  .sidebar{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "game-title fruit-info"
+      "high-score  exchange";
+    gap:12px;
+
+    /* full-bleed 覆蓋左右白邊 */
+    width:100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    padding:10px 12px;
+    box-sizing:border-box;
+
+    /* 安全區 */
+    padding-left:  max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+  @supports (width: 100svw){
+    .sidebar{
+      width:100svw;
+      margin-left: calc(50% - 50svw);
+      margin-right:calc(50% - 50svw);
+    }
+  }
+
+  /* 避免 full-bleed 造成水平卷軸 */
+  html, body{ overflow-x:hidden !important; }
+
+  /* 指定四卡片對應位置 */
+  .sidebar .game-title, .sidebar-section.game-title{ grid-area: game-title; }
+  .sidebar .fruit-info, .sidebar-section.fruit-info{ grid-area: fruit-info; }
+  .sidebar .high-score, .sidebar-section.high-score{ grid-area: high-score; }
+  .sidebar .exchange,  .sidebar-section.exchange { grid-area: exchange; }
+
+  /* 🔧 關鍵：徹底解除桌機的固定寬高，允許在 Grid 內縮放 */
+  .sidebar-section,
+  .sidebar .game-title,
+  .sidebar .high-score,
+  .sidebar .exchange,
+  .sidebar .fruit-info,
+  .sidebar-section.game-title,
+  .sidebar-section.high-score,
+  .sidebar-section.exchange,
+  .sidebar-section.fruit-info{
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: auto !important;
+    padding: 10px 12px !important;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    justify-self: stretch !important;
+  }
+
+.sidebar-section.game-title{
+    min-height: auto !important;     /* 高度自適應 */
+    padding: 14px !important;        /* 內距縮小 */
+    font-size: 14px !important;      /* 標題字縮小 */
+    gap: 6px !important;             /* 內容間距縮小 */
+  }
+
+
+  .sidebar-section.high-score{
+    min-height: auto !important;     /* 高度自適應 */
+    padding: 39px !important;        /* 內距縮小 */
+    font-size: 14px !important;      /* 標題字縮小 */
+    gap: 6px !important;             /* 內容間距縮小 */
+  }
+  /* 任何直接子元素最小寬度歸零，避免內容把格子撐爆 */
+  .sidebar > *{ min-width:0 !important; }
+
+  /* 內容微調防擠爆 */
+  .sidebar-section h2{ font-size:16px; margin-bottom:4px; }
+  .sidebar-section h3{ font-size:14px; margin-bottom:12px; }
+  .sidebar-section h4{ font-size:15px; margin-bottom:4px; }
+  .sidebar-section h5{ font-size:14px; margin-bottom:4px; }
+
+  .sidebar-section.fruit-info{ gap:6px; }
+  .sidebar-section.fruit-info .fruit{
+    padding:1px 8px;
+    font-size:13px;
+    line-height:1.35;
+  }
+
+  /* 按鈕在小螢幕拉滿寬 */
+  .again-btn,
+  #pauseBtn,
+  .sidebar-section.exchange button{
+    width:100% !important;
+    height:36px;
+    font-size:11px;
+  }
+
+  /* Drawer 切換鍵（若有）避免貼邊/瀏海 */
+  .drawer-toggle{
+    top:6px;
+    right:max(8px, env(safe-area-inset-right));
+  }
+  .credit {
+        position: fixed;         /* 固定在視窗，而不是跟著內容 */
+        bottom: 10px;            /* 距離底部 10px */
+        right: 10px;             /* 距離右邊 10px */
+        font-size: 8px;         /* 字體小一點 */
+        color: rgba(0, 0, 0, 0.3); /* 半透明灰色 */
+        font-style: italic;      /* 斜體 */
+        pointer-events: none;    /* 不影響滑鼠點擊 */
+        user-select: none;       /* 不能選取文字 */
+    }
+}
+
+
+
+    </style>
+</head>
+<body>
+    <!-- 上方工具列 -->
+    <div class="sidebar">
+        <button class="drawer-toggle" aria-expanded="true" onclick="toggleDrawer(this)">⬆</button>
+        <!-- 遊戲標題 + Again -->
+        <div class="sidebar-section game-title">
+    <h2>野獸切切樂</h2>
+    <button class="again-btn" onclick="restartGame()">again (重新)</button>
+</div>
+
+<!-- 歷史分數 + Stop -->
+<div class="sidebar-section high-score">
+    <h3>歷史最高分數</h3>
+    <div id="highScore">0</div>
+    <button id="pauseBtn" onclick="togglePause()">stop (暫停)</button>
+</div>
+        <!-- 可切物體 -->
+    <div class="sidebar-section fruit-info">
+        <h4>遊戲規則</h4>
+        <div class="fruit positive">砍怪人(+5分)</div>
+        <div class="fruit positive1">砍妹子(-5分)</div>
+        
+    </div>
+
+        <!-- 積分兌換 (垂直排列) -->
+        <div class="sidebar-section exchange">
+            <h5>積分兌換</h5>
+            <button onclick="spawnSpecialFruit()" id="specialBtn" disabled>
+                10 Point → 普通圖片  (6種)
+            </button>
+            <button onclick="changeBackgroundRandomBlue()" id="blueBtn" disabled>
+                20 Point → 換背景  (12種)
+            </button>
+            <button onclick="spawnRedEffect()" id="redBtn" disabled>
+                50 Point → 高級圖片  (7種)
+            </button> 
+        </div>
+    </div>
+
+    <!-- 下方遊戲區域 -->
+    <div class="game-container">
+        <div class="game-area" id="gameArea">
+            <div class="score-display">Point: <span id="score">0</span></div>
+        </div>
+    </div>
+
+
+    <script>
+        let gameArea = document.getElementById('gameArea');
+        let scoreElement = document.getElementById('score');
+        let highScoreElement = document.getElementById('highScore');
+        let pauseBtn = document.getElementById('pauseBtn');
+        
+        let score = 0;
+        let highScore = localStorage.getItem('fruitNinjaHighScore') || 0;
+        let sessionHighScore = 0; // 本局遊戲的最高分數
+        let isPaused = false;
+        let fruits = [];
+        let specialFruits = [];
+        let sliceLines = [];
+        
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        
+       const fruitImages = ['imags/logo0.jfif', 'imags/logo2.webp', 'imags/logo4.jfif',];
+const bombImages = ['imags/logo6.jfif', 'imags/logo8.jfif','imags/logo10.jfif' ];
+const slicedImages = {
+    'imags/logo0.jfif': 'imags/logo1.jfif',
+    'imags/logo2.webp': 'imags/logo3.jpg',
+    'imags/logo4.jfif': 'imags/logo5.jfif',
+    'imags/logo6.jfif': 'imags/logo7.jpeg',
+    'imags/logo8.jfif': 'imags/logo9.jfif',
+    'imags/logo10.jfif':'imags/logo11.jfif',
+
+};
+        // 初始化
+        highScoreElement.textContent = highScore;
+        sessionHighScore = 0; // 初始化本局最高分數
+        
+        // 生成水果和炸彈
+        function spawnFruit() {
+            if (isPaused) return;
+            
+            const isbomb = Math.random() < 0.2;
+const imgSrc = isbomb 
+ ? bombImages[Math.floor(Math.random() * bombImages.length)] 
+  : fruitImages[Math.floor(Math.random() * fruitImages.length)];
+
+const fruit = document.createElement('div');
+fruit.className = isbomb ? 'bomb' : 'fruit';
+fruit.dataset.type = isbomb ? 'bomb' : 'fruit';
+fruit.dataset.src = imgSrc; // 存原始圖片路徑
+
+// 加圖片
+const img = document.createElement('img');
+img.src = imgSrc;
+img.className = 'fruit-img';
+fruit.appendChild(img);
+
+
+            
+            // 從螢幕四邊隨機拋出
+            const side = Math.floor(Math.random() * 4);
+            let startX, startY, targetX, targetY;
+            
+            switch(side) {
+                case 0: // 左邊
+                    startX = -50;
+                    startY = Math.random() * window.innerHeight;
+                    targetX = window.innerWidth + 50;
+                    targetY = Math.random() * window.innerHeight;
+                    break;
+                case 1: // 右邊
+                    startX = window.innerWidth + 50;
+                    startY = Math.random() * window.innerHeight;
+                    targetX = -50;
+                    targetY = Math.random() * window.innerHeight;
+                    break;
+                case 2: // 上邊
+                    startX = Math.random() * window.innerWidth;
+                    startY = -50;
+                    targetX = Math.random() * window.innerWidth;
+                    targetY = window.innerHeight + 50;
+                    break;
+                case 3: // 下邊
+                    startX = Math.random() * window.innerWidth;
+                    startY = window.innerHeight + 50;
+                    targetX = Math.random() * window.innerWidth;
+                    targetY = -50;
+                    break;
+            }
+            
+            fruit.style.left = startX + 'px';
+            fruit.style.top = startY + 'px';
+            
+            gameArea.appendChild(fruit);
+            fruits.push({
+                element: fruit,
+                startX,
+                startY,
+                targetX,
+                targetY,
+                progress: 0,
+                sliced: false
+            });
+        }
+        
+        // 更新水果位置
+        function updateFruits() {
+            if (isPaused) return;
+            
+            fruits.forEach((fruit, index) => {
+                if (fruit.sliced) return;
+                
+                fruit.progress += 0.008;
+                
+                if (fruit.progress >= 1) {
+                    fruit.element.remove();
+                    fruits.splice(index, 1);
+                    return;
+                }
+                
+                // 拋物線運動
+                const t = fruit.progress;
+                const x = fruit.startX + (fruit.targetX - fruit.startX) * t;
+                const y = fruit.startY + (fruit.targetY - fruit.startY) * t + Math.sin(t * Math.PI) * -200;
+                
+                fruit.element.style.left = x + 'px';
+                fruit.element.style.top = y + 'px';
+            });
+        }
+        
+        // 滑鼠和觸控事件
+        function startSlice(e) {
+            if (isPaused) return;
+            
+            isDrawing = true;
+            const rect = gameArea.getBoundingClientRect();
+            lastX = (e.clientX || e.touches[0].clientX) - rect.left;
+            lastY = (e.clientY || e.touches[0].clientY) - rect.top;
+        }
+        
+        function slice(e) {
+            if (!isDrawing || isPaused) return;
+            
+            e.preventDefault();
+            const rect = gameArea.getBoundingClientRect();
+            const currentX = (e.clientX || e.touches[0].clientX) - rect.left;
+            const currentY = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            // 創建劃線效果
+            const line = document.createElement('div');
+            line.className = 'slice-line';
+            
+            const dx = currentX - lastX;
+            const dy = currentY - lastY;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            
+            line.style.left = lastX + 'px';
+            line.style.top = lastY + 'px';
+            line.style.width = length + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.transformOrigin = '0 50%';
+            
+            gameArea.appendChild(line);
+            sliceLines.push(line);
+            
+            // 檢查碰撞
+            checkCollision(lastX, lastY, currentX, currentY);
+            
+            // 清理舊的劃線
+            setTimeout(() => {
+                if (line.parentNode) {
+                    line.remove();
+                    const index = sliceLines.indexOf(line);
+                    if (index > -1) sliceLines.splice(index, 1);
+                }
+            }, 200);
+            
+            lastX = currentX;
+            lastY = currentY;
+        }
+        
+        function endSlice() {
+            isDrawing = false;
+        }
+        
+        // 碰撞檢測
+        function checkCollision(x1, y1, x2, y2) {
+            fruits.forEach(fruit => {
+                if (fruit.sliced) return;
+                
+                const rect = fruit.element.getBoundingClientRect();
+                const gameRect = gameArea.getBoundingClientRect();
+                const fruitX = rect.left - gameRect.left + rect.width / 2;
+                const fruitY = rect.top - gameRect.top + rect.height / 2;
+                
+                // 簡單的線段與點的距離判斷
+                const distance = distanceToLine(x1, y1, x2, y2, fruitX, fruitY);
+                
+                if (distance < 70) { // 碰撞閾值
+                    sliceFruit(fruit);
+                }
+            });
+        }
+        
+        // 計算點到線段的距離
+        function distanceToLine(x1, y1, x2, y2, px, py) {
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            
+            if (length === 0) return Math.sqrt((px - x1) * (px - x1) + (py - y1) * (py - y1));
+            
+            const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (length * length)));
+            const projectionX = x1 + t * dx;
+            const projectionY = y1 + t * dy;
+            
+            return Math.sqrt((px - projectionX) * (px - projectionX) + (py - projectionY) * (py - projectionY));
+        }
+        
+
+        // 圖片對應音效
+const slicedSounds = {
+    'imags/logo0.jfif': 'sounds/sound1.mp3',
+    'imags/logo2.webp': 'sounds/sound2.mp3',
+    'imags/logo4.jfif': 'sounds/sound3.mp3',
+    'imags/logo6.jfif': 'sounds/sound4.mp3',
+    'imags/logo8.jfif': 'sounds/sound5.mp3',
+    'imags/logo10.jfif': 'sounds/sound6.mp3',
+};
+
+        function sliceFruit(fruit) {
+    fruit.sliced = true;
+    const isBomb = fruit.element.dataset.type === 'bomb';
+    const originalSrc = fruit.element.dataset.src;
+
+    // 換成被切開的圖片
+    const newSrc = slicedImages[originalSrc];
+    fruit.element.querySelector('img').src = newSrc;
+    fruit.element.classList.add('sliced');
+
+    // 播放對應音效
+    const soundSrc = slicedSounds[originalSrc];
+    if (soundSrc) {
+        const audio = new Audio(soundSrc);
+        audio.play();
+    }
+
+    // 更新分數
+    if (isBomb) {
+        score = Math.max(0, score - 5);
+    } else {
+        score += 5;
+    }
+    updateScore();
+
+    // 0.8秒後移除
+    setTimeout(() => {
+        if (fruit.element.parentNode) {
+            fruit.element.remove();
+        }
+        const index = fruits.indexOf(fruit);
+        if (index > -1) fruits.splice(index, 1);
+    }, 800);
+}
+        
+        // 更新分數和按鈕狀態
+        function updateScore() {
+            scoreElement.textContent = score;
+            
+            // 只有當前分數超過本局最高分數時才更新記錄
+            if (score > sessionHighScore) {
+                sessionHighScore = score;
+                
+                // 如果本局最高分數超過歷史最高分數，更新歷史記錄
+                if (sessionHighScore > highScore) {
+                    highScore = sessionHighScore;
+                    highScoreElement.textContent = highScore;
+                    localStorage.setItem('fruitNinjaHighScore', highScore);
+                }
+            }
+            
+            // 更新按鈕狀態
+            document.getElementById('specialBtn').disabled = score < 10;
+            document.getElementById('blueBtn').disabled = score < 20;
+            document.getElementById('redBtn').disabled = score < 50;
+        }
+        
+        // 特殊水果修正：images/
+const specialFruitMap = {
+  'imags/logo0.jfif': { after: 'imags/logo1.jfif', sound: 'sounds/sound1.mp3' },
+  'imags/logo2.webp': { after: 'imags/logo3.jpg',  sound: 'sounds/sound2.mp3' },
+  'imags/logo4.jfif': { after: 'imags/logo5.jfif', sound: 'sounds/sound3.mp3' },
+  'imags/logo6.jfif': { after: 'imags/logo7.jpeg', sound: 'sounds/sound4.mp3' },
+  'imags/logo8.jfif': { after: 'imags/logo9.jfif', sound: 'sounds/sound5.mp3' },
+  'imags/logo10.jfif':{ after: 'imags/logo11.jfif',sound: 'sounds/sound6.mp3' }
+};
+
+// 可選：簡單音效快取
+const audioCache = new Map();
+function playSfx(path){
+  let a = audioCache.get(path);
+  if(!a){ a = new Audio(path); audioCache.set(path, a); }
+  // 重新播放（有些瀏覽器需 cloneNode 才能同時重播）
+  a.currentTime = 0; a.play().catch(()=>{ /* 靜默失敗 */ });
+}
+
+function spawnSpecialFruit(){
+  if (score < 10) return;
+  score -= 10; updateScore();
+
+  const keys = Object.keys(specialFruitMap);
+  const originalImg = keys[(Math.random()*keys.length)|0];
+  const fruitInfo = specialFruitMap[originalImg];
+
+  const specialFruit = document.createElement('div');
+  specialFruit.className = 'special-fruit';
+  const img = document.createElement('img');
+  img.src = originalImg; img.className = 'fruit-img';
+  specialFruit.appendChild(img);
+
+  // 動態取得寬高
+  const size = 60;
+  specialFruit.style.left = Math.max(0, Math.random()*(gameArea.offsetWidth  - size)) + 'px';
+  specialFruit.style.top  = Math.max(0, Math.random()*(gameArea.offsetHeight - size)) + 'px';
+
+  gameArea.appendChild(specialFruit);
+  specialFruits.push(specialFruit);
+
+  let cooling = false;
+  const handleTouch = () => {
+    if (cooling) return;
+    cooling = true;
+
+    specialFruit.classList.remove('touched');
+    void specialFruit.offsetWidth;
+    specialFruit.classList.add('touched');
+
+    img.src = fruitInfo.after;
+    playSfx(fruitInfo.sound);
+
+    setTimeout(() => {
+      img.src = originalImg;
+      specialFruit.classList.remove('touched');
+      cooling = false;
+    }, 800);
+  };
+const isMobile = window.matchMedia('(max-width: 480px)').matches;
+
+if (isMobile) {
+ let isDragging = false;
+let dragOffsetX = 0, dragOffsetY = 0;
+let startX = 0, startY = 0;
+const TAP_THRESHOLD = 5;
+
+// 新增：拖曳過程是否已觸發過 handleTouch（避免連發）
+let playedDuringDrag = false;
+const DRAG_TRIGGER = 6; // 超過 6px 視為開始拖曳
+
+specialFruit.addEventListener('pointerdown', (e) => {
+  e.preventDefault(); e.stopPropagation();
+  isDragging = true;
+  startX = e.clientX; startY = e.clientY;
+
+  playedDuringDrag = false; // 每次按下重置
+
+  specialFruit.setPointerCapture?.(e.pointerId);
+
+  const rect = specialFruit.getBoundingClientRect();
+  dragOffsetX = e.clientX - rect.left;
+  dragOffsetY = e.clientY - rect.top;
+  specialFruit.style.zIndex = 1000;
+});
+
+specialFruit.addEventListener('pointermove', (e) => {
+  if (!isDragging || !specialFruit.parentNode) return;
+  e.preventDefault();
+
+  const gameRect = gameArea.getBoundingClientRect();
+  const w = specialFruit.offsetWidth  || 60;
+  const h = specialFruit.offsetHeight || 60;
+
+  let x = e.clientX - gameRect.left - dragOffsetX;
+  let y = e.clientY - gameRect.top  - dragOffsetY;
+
+  const maxX = Math.max(0, gameArea.clientWidth  - w);
+  const maxY = Math.max(0, gameArea.clientHeight - h);
+
+  x = Math.max(0, Math.min(x, maxX));
+  y = Math.max(0, Math.min(y, maxY));
+
+  specialFruit.style.left = x + 'px';
+  specialFruit.style.top  = y + 'px';
+
+  // 拖曳超過門檻 → 觸發一次音效/變身
+  if (!playedDuringDrag &&
+      (Math.abs(e.clientX - startX) > DRAG_TRIGGER ||
+       Math.abs(e.clientY - startY) > DRAG_TRIGGER)) {
+    playedDuringDrag = true;
+    handleTouch(); // 冷卻由 handleTouch 內的 cooling 控制
+  }
+});
+
+const endDrag = (e) => {
+  if (!isDragging) return;
+  e.preventDefault();
+
+  const isTap =
+    Math.abs(e.clientX - startX) < TAP_THRESHOLD &&
+    Math.abs(e.clientY - startY) < TAP_THRESHOLD;
+
+  isDragging = false;
+  specialFruit.style.zIndex = 90;
+  try { specialFruit.releasePointerCapture?.(e.pointerId); } catch {}
+
+  // 若是點擊而非拖曳，這裡再補一次觸發
+  if (isTap && !playedDuringDrag) {
+    handleTouch();
+  }
+};
+
+specialFruit.addEventListener('pointerup', endDrag);
+specialFruit.addEventListener('pointercancel', endDrag);
+
+} else {
+  // ===== 桌機：沿用你原本的寫法（保留）======
+  specialFruit.addEventListener('click',      (e)=>{ e.stopPropagation(); handleTouch(); }, {passive:true});
+  specialFruit.addEventListener('touchstart', (e)=>{ e.stopPropagation(); handleTouch(); }, {passive:true});
+
+  let isDragging=false, dragOffsetX=0, dragOffsetY=0;
+  specialFruit.addEventListener('mousedown', (e)=>{
+    e.preventDefault(); e.stopPropagation();
+    isDragging=true;
+    const rect=specialFruit.getBoundingClientRect();
+    dragOffsetX = e.clientX - rect.left;
+    dragOffsetY = e.clientY - rect.top;
+    specialFruit.style.zIndex=1000;
+    handleTouch();
+  });
+
+  const onMove=(e)=>{
+    if(!isDragging || !specialFruit.parentNode) return;
+    const gameRect = gameArea.getBoundingClientRect();
+    const clientX = e.clientX ?? (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY ?? (e.touches && e.touches[0].clientY);
+    if(clientX==null) return;
+
+    const w = specialFruit.offsetWidth  || 60;
+    const h = specialFruit.offsetHeight || 60;
+
+    let x = clientX - gameRect.left - dragOffsetX;
+    let y = clientY - gameRect.top  - dragOffsetY;
+    x = Math.max(0, Math.min(x, gameArea.offsetWidth  - w));
+    y = Math.max(0, Math.min(y, gameArea.offsetHeight - h));
+    specialFruit.style.left = x + 'px';
+    specialFruit.style.top  = y + 'px';
+  };
+
+  const endDrag=()=>{ if(isDragging){ isDragging=false; specialFruit.style.zIndex=90; } };
+
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup',   endDrag, {once:false});
+  document.addEventListener('touchmove', onMove,  {passive:false});
+  document.addEventListener('touchend',  endDrag, {once:false});
+}
+}
+
+
+// 藍色按鈕專用 → { 換背景 }
+const blueBackgroundsDesktop = [
+  
+  'imags/logo0.jfif',
+  'imags/logo1.jfif',
+  'imags/logo4.jfif',
+  'imags/logo20.jfif',
+  
+  'imags/logo17.jfif',
+  'imags/logo16.jfif',
+  'imags/logo15.jfif',
+  'imags/logo13.jfif',
+  
+];
+
+// 手機（≤450px）用背景
+const blueBackgroundsMobile = [
+   'imags/logo0.jfif',
+  'imags/logo1.jfif',
+  'imags/logo3.jpg',
+  'imags/logo14.jfif',
+   'imags/logo13.jfif',
+   'imags/logo16.jfif',
+  'imags/logo15.jfif',
+  'imags/logo12.jpg',
+  'imags/logo18.jfif',
+  // …放你想給手機用的圖
+];
+// 取得當前應用的背景清單
+function getBlueBackgrounds() {
+  return window.matchMedia('(max-width: 450px)').matches
+    ? blueBackgroundsMobile
+    : blueBackgroundsDesktop;
+}
+
+function changeBackgroundRandomBlue() {
+  if (score < 20) return; // 按鈕消耗 20 分
+  score -= 20;
+  updateScore();
+
+  const list = getBlueBackgrounds();
+  if (!list.length) return;
+
+  const randomImg = list[Math.floor(Math.random() * list.length)];
+  gameArea.style.backgroundImage = `url(${randomImg})`;
+  gameArea.style.backgroundSize = 'cover';
+  gameArea.style.backgroundPosition = 'center';
+}
+
+
+
+// 高級圖片專用 → { after: 變身圖片, sound: 對應音效 }
+const redEffectMap = {
+  'imags/logo21.png': { after: 'imags/logo22.png', sound: 'sounds/sound7.mp3' },
+  'imags/logo16.jfif': { after: 'imags/logo15.jfif', sound: 'sounds/sound10.mp3' },
+  'imags/logo23.jfif': { after: 'imags/logo29.jfif', sound: 'sounds/sound8.mp3' },
+  'imags/logo24.jfif': { after: 'imags/logo26.jpg', sound: 'sounds/sound9.mp3' },
+  'imags/logo0.jfif': { after: 'imags/logo25.jpg', sound: 'sounds/sound13.mp3' },
+  'imags/logo17.jfif': { after: 'imags/logo28.jfif', sound: 'sounds/sound11.mp3' },
+  'imags/logo1.jfif': { after: 'imags/logo27.jpg', sound: 'sounds/sound12.mp3' },
+
+  
+};
+        
+function spawnRedEffect() {
+  if (score < 50) return; // 按鈕消耗 50 分
+  score -= 50;
+  updateScore();
+
+  // 隨機挑一張
+  const keys = Object.keys(redEffectMap);
+  const originalImg = keys[Math.floor(Math.random() * keys.length)];
+  const effectInfo = redEffectMap[originalImg]; // after + sound
+
+  const effectDiv = document.createElement('div');
+  effectDiv.className = 'special-red';
+
+  // 加圖片
+  const img = document.createElement('img');
+  img.src = originalImg;
+  img.className = 'fruit-img';
+  effectDiv.appendChild(img);
+
+  // 隨機位置
+  const baseSize = 60;
+  effectDiv.style.left = Math.max(0, Math.random() * (gameArea.offsetWidth  - baseSize)) + 'px';
+  effectDiv.style.top  = Math.max(0, Math.random() * (gameArea.offsetHeight - baseSize)) + 'px';
+
+  gameArea.appendChild(effectDiv);
+
+  // 觸發：換圖 + 音效 + 回原圖（含冷卻）
+  let cooling = false;
+  const handleTouch = () => {
+    if (cooling) return;
+    cooling = true;
+
+    effectDiv.classList.remove('touched');
+    void effectDiv.offsetWidth;          // 重新觸發 CSS 動畫
+    effectDiv.classList.add('touched');
+
+    img.src = effectInfo.after;
+    playSfx(effectInfo.sound);           // 🔁 用快取音效
+
+    setTimeout(() => {
+      img.src = originalImg;
+      effectDiv.classList.remove('touched');
+      cooling = false;
+    }, 800);
+  };
+
+  // —— 依螢幕寬度選事件模型：≤480 用 Pointer，其他用原本桌機滑鼠 ——
+  const isMobile = window.matchMedia('(max-width: 480px)').matches;
+
+  if (isMobile) {
+    // ===== 手機/小螢幕：Pointer Events =====
+    let isDragging = false;
+let dragOffsetX = 0, dragOffsetY = 0;
+let startX = 0, startY = 0;
+const TAP_THRESHOLD = 5;
+
+// ✅ 新增：拖曳時是否已觸發過音效/變身
+let playedDuringDrag = false;
+const DRAG_TRIGGER = 6; // 超過 6px 視為開始拖曳
+
+effectDiv.addEventListener('pointerdown', (e) => {
+  e.preventDefault(); e.stopPropagation();
+  isDragging = true;
+  startX = e.clientX; startY = e.clientY;
+
+  playedDuringDrag = false;      // ✅ 每次新按下就重置
+
+  effectDiv.setPointerCapture?.(e.pointerId);
+
+  const rect = effectDiv.getBoundingClientRect();
+  dragOffsetX = e.clientX - rect.left;
+  dragOffsetY = e.clientY - rect.top;
+  effectDiv.style.zIndex = 1000;
+});
+
+effectDiv.addEventListener('pointermove', (e) => {
+  if (!isDragging || !effectDiv.parentNode) return;
+  e.preventDefault();
+
+  const gameRect = gameArea.getBoundingClientRect();
+  const w = effectDiv.offsetWidth  || baseSize;
+  const h = effectDiv.offsetHeight || baseSize;
+
+  let x = e.clientX - gameRect.left - dragOffsetX;
+  let y = e.clientY - gameRect.top  - dragOffsetY;
+
+  const maxX = Math.max(0, gameArea.clientWidth  - w);
+  const maxY = Math.max(0, gameArea.clientHeight - h);
+
+  x = Math.max(0, Math.min(x, maxX));
+  y = Math.max(0, Math.min(y, maxY));
+
+  effectDiv.style.left = x + 'px';
+  effectDiv.style.top  = y + 'px';
+
+  // ✅ 新增：拖曳超過門檻，觸發一次音效/變身
+  if (!playedDuringDrag &&
+      (Math.abs(e.clientX - startX) > DRAG_TRIGGER ||
+       Math.abs(e.clientY - startY) > DRAG_TRIGGER)) {
+    playedDuringDrag = true;
+    handleTouch(); // 冷卻機制已在 handleTouch 內處理
+  }
+});
+
+const endDrag = (e) => {
+  if (!isDragging) return;
+  e.preventDefault();
+
+  const isTap =
+    Math.abs(e.clientX - startX) < TAP_THRESHOLD &&
+    Math.abs(e.clientY - startY) < TAP_THRESHOLD;
+
+  isDragging = false;
+  effectDiv.style.zIndex = 90;
+  try { effectDiv.releasePointerCapture?.(e.pointerId); } catch {}
+
+  // 點擊才在這裡觸發；若拖曳時已觸發過，就不再播
+  if (isTap && !playedDuringDrag) {
+    handleTouch();
+  }
+};
+
+effectDiv.addEventListener('pointerup', endDrag);
+effectDiv.addEventListener('pointercancel', endDrag);
+  } else {
+    // ===== 桌機：沿用你原本的滑鼠事件 =====
+    // 點擊/觸控（沿用舊邏輯）
+    effectDiv.addEventListener('click',      (e) => { e.stopPropagation(); handleTouch(); }, { passive: true });
+    effectDiv.addEventListener('touchstart', (e) => { e.stopPropagation(); handleTouch(); }, { passive: true });
+
+    // 拖曳
+    let isDragging = false;
+    let dragOffsetX = 0, dragOffsetY = 0;
+
+    effectDiv.addEventListener('mousedown', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      isDragging = true;
+      const rect = effectDiv.getBoundingClientRect();
+      dragOffsetX = e.clientX - rect.left;
+      dragOffsetY = e.clientY - rect.top;
+      effectDiv.style.zIndex = 1000;
+      handleTouch(); // 若你希望拖曳開始就有特效，保留這行
+    });
+
+    const onMove = (e) => {
+      if (!isDragging || !effectDiv.parentNode) return;
+      e.preventDefault();
+      const gameRect = gameArea.getBoundingClientRect();
+
+      const w = effectDiv.offsetWidth  || baseSize;
+      const h = effectDiv.offsetHeight || baseSize;
+
+      let x = e.clientX - gameRect.left - dragOffsetX;
+      let y = e.clientY - gameRect.top  - dragOffsetY;
+      x = Math.max(0, Math.min(x, gameArea.offsetWidth  - w));
+      y = Math.max(0, Math.min(y, gameArea.offsetHeight - h));
+      effectDiv.style.left = x + 'px';
+      effectDiv.style.top  = y + 'px';
+      
+    };
+
+    const endDrag = () => {
+      if (isDragging) {
+        isDragging = false;
+        effectDiv.style.zIndex = 90;
+      }
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup',   endDrag, { once: false });
+    document.addEventListener('touchmove', onMove,  { passive: false });
+    document.addEventListener('touchend',  endDrag, { once: false });
+  }
+}
+
+        // 暫停/繼續
+        function togglePause() {
+            isPaused = !isPaused;
+            pauseBtn.textContent = isPaused ? 'start (開始)' : 'stop (暫停)';
+        }
+        
+        // 重新開始
+function restartGame() {
+    score = 0;
+    sessionHighScore = 0; // 重置本局最高分數
+    isPaused = false;
+    updateScore();
+    pauseBtn.textContent = 'stop (暫停)';
+
+    // 清除所有水果和特殊效果
+    fruits.forEach(fruit => fruit.element.remove());
+    specialFruits.forEach(fruit => fruit.remove());
+    sliceLines.forEach(line => line.remove());
+
+    // ✅ 新增：清除所有 .special-red 圖案
+    document.querySelectorAll('.special-red').forEach(el => el.remove());
+
+    // 清空陣列
+    fruits = [];
+    specialFruits = [];
+    sliceLines = [];
+
+    // 重置背景
+    document.body.className = '';
+    gameArea.className = 'game-area';
+}
+        
+        // 事件監聽器
+        gameArea.addEventListener('mousedown', startSlice);
+        gameArea.addEventListener('mousemove', slice);
+        gameArea.addEventListener('mouseup', endSlice);
+        
+        gameArea.addEventListener('touchstart', startSlice, { passive: false });
+        gameArea.addEventListener('touchmove', slice, { passive: false });
+        gameArea.addEventListener('touchend', endSlice);
+        
+        // 遊戲主循環
+        setInterval(() => {
+            if (Math.random() < 0.02) { // 2% 機率每幀生成水果
+                spawnFruit();
+            }
+            updateFruits();
+        }, 16); // ~60 FPS
+    </script>
+    <script>
+    function toggleDrawer(btn){
+      const collapsed = document.body.classList.toggle('drawer-collapsed');
+      btn.textContent = collapsed ? '⬇' : '⬆';
+      btn.setAttribute('aria-expanded', String(!collapsed));
+    }
+  </script>
+  <div class="credit">感謝 黃韋傑學者 提供</div>
+</body>
+</html>
