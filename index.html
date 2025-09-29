@@ -204,6 +204,16 @@ body {
   color: #1ee743;
   font-size: 20px;
 }
+.fruit-info {
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+.fruit-info div {
+            margin: 5px 0;
+            font-size: 18px;
+        }
 .fruit.positive1 {
   color: #f00d0d;
   font-size: 20px;
@@ -381,7 +391,7 @@ html, body { background:#8B4513 !important; }
             animation: sliceEffect 0.8s ease-out forwards;
         }
 
-        .special-red,.special-fruit {
+        .special-fruit {
             position: absolute;
             font-size: 60px;
             z-index: 90;
@@ -392,12 +402,12 @@ html, body { background:#8B4513 !important; }
   touch-action: none;         /* 元件本身也停用預設手勢 */
         }
 
-        .special-red,.special-fruit:hover {
+        .special-fruit:hover {
             transform: scale(1.1);
             filter: brightness(1.2);
         }
 
-        .special-red,.special-fruit:active {
+        .special-fruit:active {
             transform: scale(0.95);
         }
 
@@ -407,21 +417,13 @@ html, body { background:#8B4513 !important; }
             100% { transform: scale(1) rotate(0deg); }
         }
 
-        .special-red,.special-fruit.touched {
+        .special-fruit.touched {
             animation: touchReaction 0.5s ease-out;
         }
 
-        .fruit-info {
-            background: rgba(0,0,0,0.8);
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
+        
 
-        .fruit-info div {
-            margin: 5px 0;
-            font-size: 18px;
-        }
+        
 .special-fruit img {
   width: 70px;
   height: 70px;
@@ -431,9 +433,42 @@ html, body { background:#8B4513 !important; }
   position: absolute;
   cursor: grab;
 }
-       
+/* special-red 與 special-fruit 一樣的互動/動畫效果 */
+.special-red {
+  position: absolute;
+  z-index: 90;
+  width: 60px;
+  height: 60px;
+  cursor: grab;                        /* 被你前面的合併選擇器覆蓋時，這段需放後面 */
+  transition: transform .3s ease, filter .3s ease;
+  user-select: none;
+  touch-action: none;
+  will-change: transform, filter;
+}
 
-       
+.special-red:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.special-red:active {
+  transform: scale(0.95);
+}
+
+/* 套用與 special-fruit 相同的動畫 */
+.special-red.touched {
+  animation: touchReaction 0.5s ease-out;
+}
+
+/* 圖片尺寸與行為（目前你的 fruit 是 70x70）*/
+.special-red img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+             
         
 
         .game-title {
@@ -1190,14 +1225,20 @@ specialFruit.addEventListener('pointercancel', endDrag);
 const blueBackgroundsDesktop = [
   
   'imags/logo0.jfif',
-  'imags/logo1.jfif',
-  'imags/logo4.jfif',
-  'imags/logo20.jfif',
-  
-  'imags/logo17.jfif',
+  'imags/logo24.jfif',
   'imags/logo16.jfif',
-  'imags/logo15.jfif',
   'imags/logo13.jfif',
+
+  
+  'imags/logo15.jfif',
+  'imags/logo28.jfif',
+  'imags/logo21.png',
+  'imags/logo22.png',
+  'imags/logo4.jfif',
+
+  'imags/logo36.jpg',
+  'imags/logo37.webp',
+  'imags/logo35.jpeg',
   
 ];
 
@@ -1206,12 +1247,15 @@ const blueBackgroundsMobile = [
    'imags/logo0.jfif',
   'imags/logo1.jfif',
   'imags/logo3.jpg',
-  'imags/logo14.jfif',
+  'imags/logo5.jfif',
+  'imags/logo14.jpg',
    'imags/logo13.jfif',
    'imags/logo16.jfif',
   'imags/logo15.jfif',
   'imags/logo12.jpg',
   'imags/logo18.jfif',
+  'imags/logo20.jfif',
+  'imags/logo29.jfif',
   // …放你想給手機用的圖
 ];
 // 取得當前應用的背景清單
