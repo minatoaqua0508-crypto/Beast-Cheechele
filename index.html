@@ -9,7 +9,7 @@
   <meta name="author" content="黃韋傑學者">
   <meta property="og:title" content="野獸切切樂">
   <meta property="og:description" content="享受野獸的咆嘯">
-  <meta property="og:image" content="https://minatoaqua0508-crypto.github.io/Beast-Cheechele//images/logo1.jfif">
+  <meta property="og:image" content="https://minatoaqua0508-crypto.github.io/Beast-Cheechele//imags/logo0.jfif">
   <meta property="og:url" content="https://minatoaqua0508-crypto.github.io/Beast-Cheechele//index.html">
   <meta property="og:type" content="website">
 <meta property="og:site_name" content="野獸切切樂">
@@ -51,7 +51,7 @@ body {
 .game-area {
   flex: 1;
   position: relative;
-  background: #D2B48C;
+ background: linear-gradient(135deg, #B7E0FF 0%, #FFF5CD 100%);/* 背景色 */
   overflow: hidden;
   cursor: crosshair;
   touch-action: none;       /* 讓觸控事件不被捲動吃掉 */
@@ -103,7 +103,7 @@ body {
 .sidebar-section.game-title {
   width: 300px;
   min-height: 80px;
-  background: #8da1c8;  /* 背景色 */
+  background: linear-gradient(180deg, #BBDCE5 0%, #ECEEDF 100%);/* 背景色 */
   border-radius: 8px;
   padding: 51px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -119,15 +119,17 @@ body {
   padding: 8px 14px;
   border: none;
   border-radius: 5px;
-  background: #FF6B35;
-  color: white;
+  background: linear-gradient(135deg, #D9C4B0 0%, #CFAB8D 100%); /* 背景色 */
+ border: 1px solid #000; /* 外黑框 */
+  color: rgb(0, 0, 0);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .again-btn:hover {
-  background: #FF8C69;
+  background: linear-gradient(45deg, #CFAB8D 0%, #D9C4B0 100%); /* 背景色 */
+  border-radius: 8px;
   transform: scale(1.05);
 }
 
@@ -135,7 +137,11 @@ body {
 .sidebar-section h3 {
   font-size: 20px;
   font-weight: bold;
-  color: #8B4513;
+
+  background: linear-gradient(180deg, #B9375D 0%,  #D25D5D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
   margin-bottom: 8px;
   text-align: center;
 }
@@ -144,7 +150,7 @@ body {
 .sidebar-section.high-score {
   width: 300px;
   min-height: 80px;
-  background: #8da1c8;
+  background: linear-gradient(180deg, #CADCAE 0%, #E1E9C9 100%);
   border-radius: 8px;
   padding: 36px;
   display: flex;
@@ -161,15 +167,16 @@ body {
   padding: 8px 14px;
   border: none;
   border-radius: 5px;
-  background: #ee1818;
-  color: white;
+  background: linear-gradient(135deg, #EDA35A 0%, #FEE8D9 100%); /* 背景色 */
+   border: 1px solid #000; /* 外黑框 */
+  color: black;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 #pauseBtn:hover {
-  background: #ee1818;
+  background: linear-gradient(135deg, #FEE8D9 0%, #EDA35A 100%); /* 背景色 */
   transform: scale(1.05);
 }
 
@@ -230,7 +237,7 @@ body {
 .sidebar-section.exchange {
   width: 240px;          /* 固定寬度 */
   min-height: 160px;     /* 固定高度 */
-  background: #8da1c8;   /* 深藍灰背景 */
+  background: linear-gradient(180deg, #BBDCE5 0%, #ECEEDF 100%);/* 背景色 */
   border-radius: 8px;    /* 圓角 */
   padding: 1px;          /* 內距 */
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -249,8 +256,9 @@ body {
   height: 40px;          /* 統一高度 */
   border: none;
   border-radius: 5px;
-  background: #FF6B35;   /* 統一綠色 */
-  color: white;
+ background: linear-gradient(180deg, #59D5E0 0%, #F5DD61 100%);
+  border: 1px solid #000; /* 外黑框 */
+  color: black;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -258,7 +266,7 @@ body {
 
 /* 🎯 按鈕 hover 效果 */
 .sidebar-section.exchange button:hover:enabled {
-  background: #FF8C69;   /* 亮綠色 */
+   background: linear-gradient(180deg,#F5DD61 0%, #59D5E0 100%);
   transform: scale(1.05);
 }
 
